@@ -111,15 +111,12 @@ public class DiffAdapter extends RecyclerView.Adapter<DiffVH> {
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position);
         } else {
-            DiffVH myViewHolder = (DiffVH) holder;
             Bundle bundle = (Bundle) payloads.get(0);
             if (bundle.getString("name") != null) {
-                myViewHolder.tv1.setText(bundle.getString("name"));
-                myViewHolder.tv1.setTextColor(Color.BLUE);
+                holder.tv1.setText(bundle.getString("name"));
+                holder.tv1.setTextColor(Color.BLUE);
             }
         }
-
-
     }
 
     @Override
