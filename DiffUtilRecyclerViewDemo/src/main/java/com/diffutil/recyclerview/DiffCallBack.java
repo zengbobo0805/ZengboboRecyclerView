@@ -1,5 +1,7 @@
 package com.diffutil.recyclerview;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil.Callback;
 
 import com.diffutil.recyclerview.bean.TestBean;
@@ -63,5 +65,19 @@ public class DiffCallBack extends Callback {
             return false;//如果有内容不同，就返回false
         }
         return true; //默认两个data内容是相同的
+    }
+
+
+    //    getChangePayload()方法是在areItemsTheSame()返回true，而areContentsTheSame()返回false时被回调的，
+//    也就是一个Item的内容发生了变化，而这个变化有可能是局部的（例如微博的点赞，我们只需要刷新图标而不是整个Item）。
+//    所以可以在getChangePayload()中封装一个Object来告诉RecyclerView进行局部的刷新。
+    @Nullable
+    @Override
+    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+//        return super.getChangePayload(oldItemPosition, newItemPosition);
+        TestBean newStudent = mNewDatas.get(newItemPosition);
+        Bundle diffBundle = new Bundle();
+        diffBundle.putString("name", newStudent.getName());
+        return diffBundle;
     }
 }

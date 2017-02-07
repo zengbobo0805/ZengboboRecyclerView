@@ -1,6 +1,8 @@
 package com.diffutil.recyclerview.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -31,36 +33,36 @@ public class DiffAdapter extends RecyclerView.Adapter<DiffVH> {
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
             super.onItemRangeChanged(positionStart, itemCount);
-            L.i("DiffAdapter observer onItemRangeChanged positionStart:"+positionStart
-                    +",itemCount:"+itemCount);
+            L.i("DiffAdapter observer onItemRangeChanged positionStart:" + positionStart
+                    + ",itemCount:" + itemCount);
         }
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
             super.onItemRangeChanged(positionStart, itemCount, payload);
-            L.i("DiffAdapter observer onItemRangeChanged positionStart:"+positionStart
-                    +",itemCount:"+itemCount+",payload:"+payload);
+            L.i("DiffAdapter observer onItemRangeChanged positionStart:" + positionStart
+                    + ",itemCount:" + itemCount + ",payload:" + payload);
         }
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
             super.onItemRangeInserted(positionStart, itemCount);
-            L.i("DiffAdapter observer onItemRangeInserted positionStart:"+positionStart
-                    +",itemCount:"+itemCount);
+            L.i("DiffAdapter observer onItemRangeInserted positionStart:" + positionStart
+                    + ",itemCount:" + itemCount);
         }
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
             super.onItemRangeMoved(fromPosition, toPosition, itemCount);
-            L.i("DiffAdapter observer onItemRangeMoved fromPosition:"+fromPosition
-                    +",toPosition:"+toPosition+",itemCount:"+itemCount);
+            L.i("DiffAdapter observer onItemRangeMoved fromPosition:" + fromPosition
+                    + ",toPosition:" + toPosition + ",itemCount:" + itemCount);
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
             super.onItemRangeRemoved(positionStart, itemCount);
-            L.i("DiffAdapter observer onItemRangeRemoved positionStart:"+positionStart
-                    +",itemCount:"+itemCount);
+            L.i("DiffAdapter observer onItemRangeRemoved positionStart:" + positionStart
+                    + ",itemCount:" + itemCount);
         }
     };
 
@@ -70,10 +72,10 @@ public class DiffAdapter extends RecyclerView.Adapter<DiffVH> {
         mInflater = LayoutInflater.from(mContext);
     }
 
-    public void register(boolean isRegister){
-        if(isRegister){
+    public void register(boolean isRegister) {
+        if (isRegister) {
             registerAdapterDataObserver(observer);
-        }else{
+        } else {
             unregisterAdapterDataObserver(observer);
         }
 
@@ -98,6 +100,26 @@ public class DiffAdapter extends RecyclerView.Adapter<DiffVH> {
         holder.tv1.setText(bean.getName());
         holder.tv2.setText(bean.getDesc());
         holder.iv.setImageResource(bean.getPic());
+    }
+
+    //TODO
+    // @see android.support.v7.util.DiffUtil.Callback.getChangePayload
+    @Override
+    public void onBindViewHolder(DiffVH holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        L.i("DiffAdapter onBindViewHolder holder:" + holder + ",position:" + position + ",payloads:" + payloads);
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            DiffVH myViewHolder = (DiffVH) holder;
+            Bundle bundle = (Bundle) payloads.get(0);
+            if (bundle.getString("name") != null) {
+                myViewHolder.tv1.setText(bundle.getString("name"));
+                myViewHolder.tv1.setTextColor(Color.BLUE);
+            }
+        }
+
+
     }
 
     @Override
@@ -142,11 +164,6 @@ public class DiffAdapter extends RecyclerView.Adapter<DiffVH> {
         return super.getItemViewType(position);
     }
 
-    @Override
-    public void onBindViewHolder(DiffVH holder, int position, List<Object> payloads) {
-        super.onBindViewHolder(holder, position, payloads);
-        L.i("DiffAdapter onBindViewHolder holder:" + holder + ",position:" + position+",payloads:"+payloads);
-    }
 
     @Override
     public boolean onFailedToRecycleView(DiffVH holder) {
